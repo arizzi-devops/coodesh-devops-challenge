@@ -35,7 +35,6 @@ jobs:
           chmod 600 ${{ env.ssh_folder }}/${{ env.ssh_file }}.pub -v
 
 
-      # working-directory: "${{ env.tf_folder }}"
       # - name: Setup terraform
       #   uses: hashicorp/setup-terraform@v2
       #   with:
@@ -46,11 +45,10 @@ jobs:
       #   run: terraform fmt -check
       #   continue-on-error: true
 
-        - name: Terraform Init
-          id: init
-          run: terraform init
-          continue-on-error: true
-          working-directory: "${{ env.tf_folder }}"
+      # - name: Terraform Init
+      #   id: init
+      #   run: terraform init
+      #   continue-on-error: true
 
       # - name: Terraform Validate
       #   id: validate
