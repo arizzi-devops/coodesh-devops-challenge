@@ -10,6 +10,7 @@ env:
   tf_folder: tf-project
   ssh_folder: ssh_key_folder
   ssh_file: id_rsa
+  aws-region: "${{ secrets.AWS_REGION }}"
   # root_folder: "${{ runner.workspace }}"
 
 jobs:
@@ -22,18 +23,14 @@ jobs:
       run:
         working-directory: "${{ env.tf_folder }}"
     steps:
-
       - name: checkout
         uses: actions/checkout@v4
-
-
       - name: AWS Credentials - Configure
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: "${{ secrets.AWS_REGION }}"
           aws-access-key-id: "${{ secrets.AWS_ACCESS_KEY_ID }}"
           aws-secret-access-key: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-
       - name: SSH Key - Configure
         run: |
           mkdir -p ${{ env.ssh_folder }}
