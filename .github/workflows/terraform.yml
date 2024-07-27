@@ -45,21 +45,21 @@ jobs:
         run: terraform fmt -check
         continue-on-error: true
 
-      # - name: Terraform Init
-      #   id: init
-      #   run: terraform init
-      #   continue-on-error: true
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        continue-on-error: true
 
-      # - name: Terraform Validate
-      #   id: validate
-      #   run: terraform validate -no-color
-      #   continue-on-error: true
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        continue-on-error: true
 
-      # - name: Terraform Plan
-      #   id: plan
-      #   if: github.event_name == 'pull_request'
-      #   run: terraform plan -no-color -input=false
-      #   continue-on-error: true
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
 
       # - name: Pull Request Comment
       #   uses: actions/github-script@v6
