@@ -10,67 +10,47 @@ env:
   tf_folder: tf-project
   ssh_folder: ssh_key_folder
   ssh_file: id_rsa
-  # root_folder: ${{ }}
+  root_folder: ${{ runner.workspace }}
 
 jobs:
   plan:
     runs-on: ubuntu-20.04
-    # defaults:
-    #   run:
-    #     working-directory: "${{ env.tf_folder }}"
     permissions:
       contents: read
       pull-requests: write
     steps:
 
       - name: Dump runner context
-        run: echo "${{ runner.workspace }}"
-
-      - name: Show default environment variables
-        run: |
-          echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
-          echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
-          echo "The run id is: $GITHUB_RUN_ID"
-          echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-          echo "GitHub SHA: $GITHUB_SHA"
-
-      - uses: actions/checkout@v4
-
-      - name: Dump secrets context
-        env:
-          ALLMYSECRETS: ${{ toJSON(secrets) }}
-        run: echo "${ALLMYSECRETS}"
-
-      - name: Dump vars context
-        env:
-          VARS_JSON: ${{ toJSON(vars) }}
-        run: echo "${VARS_JSON}"
+        run: echo "$root_folder"
 
 
-      - name: Configure AWS Credentials
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: AWS Credentials - Configure
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: "${{ secrets.AWS_REGION }}"
           aws-access-key-id: "${{ secrets.AWS_ACCESS_KEY_ID }}"
           aws-secret-access-key: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
-      - name: Configure SSH Key
+      - name: SSH Key - Configure
         run: |
           mkdir -p ${{ env.ssh_folder }}
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ${{ env.ssh_folder }}/${{ env.ssh_file }}.pub
           chmod 600 ${{ env.ssh_folder }}/${{ env.ssh_file }}.pub -v
 
-      - name: Terraform Format
+      - name: Terraform - Format
         id: fmt
         run: terraform fmt -check
         continue-on-error: true
 
-      - name: Terraform Init
+      - name: Terraform - Init
         id: init
         run: terraform init
         continue-on-error: true
 
-      - name: Terraform Validate
+      - name: Terraform - Validate
         id: validate
         run: terraform validate -no-color
         continue-on-error: true
