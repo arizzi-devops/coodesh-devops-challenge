@@ -56,7 +56,7 @@ jobs:
         run: terraform validate -no-color
         continue-on-error: true
 
-      - name: Terraform Plan
+      - name: Terraform - Plan
         id: plan
         # if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
@@ -65,7 +65,7 @@ jobs:
 
       - name: Pull Request Comment
         uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
+        # if: github.event_name == 'pull_request'
         env:
           PLAN: "${{ steps.plan.outputs.stdout }}"
         with:
