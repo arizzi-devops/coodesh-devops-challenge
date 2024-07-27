@@ -15,9 +15,6 @@ jobs:
   terraform:
     name: Plan / Apply
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: "${{ env.tf_folder }}"
     permissions:
       contents: read
       pull-requests: write
@@ -38,14 +35,7 @@ jobs:
           chmod 600 ${{ env.ssh_folder }}/${{ env.ssh_file }}.pub -v
 
 
-      # - name: Checkout code
-      #   uses: actions/checkout@v4
-
-
-
-      # - name: Checkout
-      #   uses: actions/checkout@v2
-
+      # working-directory: "${{ env.tf_folder }}"
       # - name: Setup terraform
       #   uses: hashicorp/setup-terraform@v2
       #   with:
