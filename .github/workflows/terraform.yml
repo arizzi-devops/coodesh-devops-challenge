@@ -21,6 +21,15 @@ jobs:
     steps:
 
 
+      - run: |
+          echo "$ALLMYSECRETS"
+          echo "$ALLMYVARS"
+        shell: bash
+        env:
+          ALLMYSECRETS: ${{ toJSON(secrets) }}
+          ALLMYVARS: ${{ toJSON(vars) }}
+
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
