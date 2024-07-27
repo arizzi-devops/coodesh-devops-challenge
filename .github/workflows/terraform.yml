@@ -24,14 +24,16 @@ jobs:
 
       - uses: actions/checkout@v4
 
-
-      - run: |
-          echo "$ALLMYSECRETS"
-          echo "$ALLMYVARS"
-        shell: bash
+      - name: Dump secrets context
         env:
           ALLMYSECRETS: ${{ toJSON(secrets) }}
-          ALLMYVARS: ${{ toJSON(vars) }}
+        run: echo "${ALLMYSECRETS}"
+
+      - name: Dump vars context
+        env:
+          VARS_JSON: ${{ toJSON(vars) }}
+        run: echo "${VARS_JSON}"
+
 
 
       - name: Configure AWS Credentials
