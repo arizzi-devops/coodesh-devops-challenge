@@ -14,9 +14,9 @@ env:
 jobs:
   plan:
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: "${{ env.tf_folder }}"
+    # defaults:
+    #   run:
+    #     working-directory: "${{ env.tf_folder }}"
     permissions:
       contents: read
       pull-requests: write
