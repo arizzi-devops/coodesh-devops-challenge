@@ -10,7 +10,7 @@ env:
   tf_folder: tf-project
   ssh_folder: ssh_key_folder
   ssh_file: id_rsa
-  root_folder: "${{ runner.workspace }}"
+  # root_folder: "${{ runner.workspace }}"
 
 jobs:
   plan:
@@ -20,12 +20,16 @@ jobs:
       pull-requests: write
     steps:
 
-      - name: Dump runner context
-        run: echo "$root_folder"
-
-
       - name: checkout
         uses: actions/checkout@v4
+      - run: |
+        echo ${{ github.workspace }}
+        echo $GITHUB_WORKSPACE
+
+      - name: Dump runner context
+        run: echo "${{ runner.workspace }}"
+
+
 
       - name: AWS Credentials - Configure
         uses: aws-actions/configure-aws-credentials@v4
