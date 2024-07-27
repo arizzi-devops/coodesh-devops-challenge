@@ -7,7 +7,9 @@ on:
   push:
 
 env:
-  tf_folder: "tf-project"
+  tf_folder: tf-project
+  ssh_folder: ssh_key_folder
+  ssh_file: id_rsa
 
 jobs:
   terraform:
