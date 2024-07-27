@@ -7,9 +7,7 @@ on:
   push:
 
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  tf_folder: tf_project
+  tf_folder: "tf_project"
 
 jobs:
   terraform:
@@ -22,93 +20,117 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
 
-    - name: Setup terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.3.7
 
-    - name: Terraform Format
-      id: fmt
-      run: terraform fmt -check
-      continue-on-error: true
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Terraform Init
-      id: init
-      run: terraform init
-      continue-on-error: true
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: "${{ secrets.AWS_REGION }}"
+          aws-access-key-id: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          aws-secret-access-key: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
-    - name: Terraform Validate
-      id: validate
-      run: terraform validate -no-color
-      continue-on-error: true
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
 
-    - name: Terraform Plan
-      id: plan
-      if: github.event_name == 'pull_request'
-      run: terraform plan -no-color -input=false
-      continue-on-error: true
+      - name: Configure SSH Key
+        run: |
+          mkdir -p ${{ env.ssh_folder }}
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ${{ env.ssh_folder }}/${{ env.ssh_file }}.pub
+          chmod 600 ${{ env.ssh_folder }}/${{ env.ssh_file }}.pub -v
 
-    - name: Pull Request Comment
-      uses: actions/github-script@v6
-      if: github.event_name == 'pull_request'
-      env:
-        PLAN: "${{ steps.plan.outputs.stdout }}"
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { data: comments } = await github.rest.issues.listComments({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.issue.number,
-          })
-          const botComment = comments.find(comment => {
-            return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
-          })
 
-          const output = `#### Terraform Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
-          #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
-          <details><summary>Validation Output</summary>
 
-          \`\`\`\n
-          ${{ steps.validate.outputs.stdout }}
-          \`\`\`
 
-          </details>
+      # - name: Checkout
+      #   uses: actions/checkout@v2
 
-          #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
+      # - name: Setup terraform
+      #   uses: hashicorp/setup-terraform@v2
+      #   with:
+      #     terraform_version: 1.3.7
 
-          <details><summary>Show Plan</summary>
+      # - name: Terraform Format
+      #   id: fmt
+      #   run: terraform fmt -check
+      #   continue-on-error: true
 
-          \`\`\`terraform\n
-          ${process.env.PLAN}
-          \`\`\`
+      # - name: Terraform Init
+      #   id: init
+      #   run: terraform init
+      #   continue-on-error: true
 
-          </details>`;
+      # - name: Terraform Validate
+      #   id: validate
+      #   run: terraform validate -no-color
+      #   continue-on-error: true
 
-          if (botComment) {
-            github.rest.issues.updateComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: botComment.id,
-              body: output
-            })
-          } else {
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-          }
+      # - name: Terraform Plan
+      #   id: plan
+      #   if: github.event_name == 'pull_request'
+      #   run: terraform plan -no-color -input=false
+      #   continue-on-error: true
 
-    - name: Terraform Status
-      if: steps.plan.outcome == 'failure' || steps.validate.outcome == 'failure' || steps.init.outcome == 'failure' || steps.fmt.outcome == 'failure'
-      run: exit 1
+      # - name: Pull Request Comment
+      #   uses: actions/github-script@v6
+      #   if: github.event_name == 'pull_request'
+      #   env:
+      #     PLAN: "${{ steps.plan.outputs.stdout }}"
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     script: |
+      #       const { data: comments } = await github.rest.issues.listComments({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         issue_number: context.issue.number,
+      #       })
+      #       const botComment = comments.find(comment => {
+      #         return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+      #       })
 
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-      run: terraform apply -auto-approve -input=false
+      #       const output = `#### Terraform Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
+      #       #### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
+      #       #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
+      #       <details><summary>Validation Output</summary>
+
+      #       \`\`\`\n
+      #       ${{ steps.validate.outputs.stdout }}
+      #       \`\`\`
+
+      #       </details>
+
+      #       #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
+
+      #       <details><summary>Show Plan</summary>
+
+      #       \`\`\`terraform\n
+      #       ${process.env.PLAN}
+      #       \`\`\`
+
+      #       </details>`;
+
+      #       if (botComment) {
+      #         github.rest.issues.updateComment({
+      #           owner: context.repo.owner,
+      #           repo: context.repo.repo,
+      #           comment_id: botComment.id,
+      #           body: output
+      #         })
+      #       } else {
+      #         github.rest.issues.createComment({
+      #           issue_number: context.issue.number,
+      #           owner: context.repo.owner,
+      #           repo: context.repo.repo,
+      #           body: output
+      #         })
+      #       }
+
+      # - name: Terraform Status
+      #   if: steps.plan.outcome == 'failure' || steps.validate.outcome == 'failure' || steps.init.outcome == 'failure' || steps.fmt.outcome == 'failure'
+      #   run: exit 1
+
+      # - name: Terraform Apply
+      #   if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      #   run: terraform apply -auto-approve -input=false
