@@ -54,6 +54,7 @@ jobs:
         # if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         continue-on-error: true
+        working-directory: "${{ env.tf_folder }}"
 
       - name: Pull Request Comment
         uses: actions/github-script@v6
