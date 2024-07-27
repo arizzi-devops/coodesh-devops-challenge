@@ -10,7 +10,10 @@ env:
   tf_folder: tf-project
   ssh_folder: ssh_key_folder
   ssh_file: id_rsa
+<<<<<<< HEAD
   # root_folder: "${{ runner.workspace }}"
+=======
+>>>>>>> origin/main
 
 jobs:
   plan:
