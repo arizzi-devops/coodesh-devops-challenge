@@ -1,4 +1,3 @@
-
 # resource "aws_key_pair" "id_rsa" {
 #   key_name   = "${local.application_name}-key_pair"
 #   public_key = file("../config/keys/id_rsa.pub")
@@ -114,11 +113,3 @@
 #     cidr_blocks = ["0.0.0.0/0"]
 #   }
 # }
-
-resource "aws_s3_bucket" "coodesh_s3" {
-  tags   = { Name = "${local.application_name}-s3" }
-  bucket = "${local.application_name}-s3"
-    lifecycle {
-        prevent_destroy = true
-    }
-}
