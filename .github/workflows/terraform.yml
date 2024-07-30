@@ -49,11 +49,11 @@ jobs:
         run: terraform plan -input=false
         # continue-on-error: true
 
-      - name: Terraform - Apply
-        id: apply
-        # if: github.event_name == 'pull_request'
-        run: terraform apply -auto-approve
-        # continue-on-error: true
+      # - name: Terraform - Apply
+      #   id: apply
+      #   # if: github.event_name == 'pull_request'
+      #   run: terraform apply -auto-approve
+      #   # continue-on-error: true
 
       # - name: Pull Request Comment
       #   uses: actions/github-script@v6
