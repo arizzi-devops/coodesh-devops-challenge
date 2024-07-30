@@ -12,7 +12,6 @@ env:
   ssh_file: id_rsa
   aws-region: "${{ secrets.AWS_REGION }}"
   TF_LOG: INFO
-  backend_config: config/local/backend.hcl
   # root_folder: "${{ runner.workspace }}"
 
 jobs:
@@ -42,7 +41,7 @@ jobs:
 
       - name: Terraform - Init
         id: init
-        run: terraform init -backend=true -backend-config="${{ backend_config }}"
+        run: terraform init -backend=true -backend-config="config/local/backend.hcl"
 
       - name: Terraform - Plan
         id: plan

@@ -62,3 +62,9 @@ Desenhar e construir uma pipeline para apoiar a entrega contínua da aplicação
 ## Suporte
 
 Use a [nossa comunidade](https://discord.gg/rdXbEvjsWu) para tirar dúvidas sobre o processo ou envie uma mensagem diretamente a um especialista no chat da plataforma. 
+
+
+
+### Commands
+terraform init -backend=true -backend-config="config/local/backend.hcl"
+terraform plan -var-file=config/local/terraform.tfvars
