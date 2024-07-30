@@ -6,7 +6,12 @@
 #   subnet_id                   = aws_subnet.subnet_lan.id
 #   associate_public_ip_address = true
 #   key_name                    = aws_key_pair.id_rsa.id
-#   security_groups             = [aws_security_group.allow_ssh.id]
+#   security_groups             = [
+#         aws_security_group.allow_ssh.id,
+#         aws_security_group.in_ssh.id,
+#         aws_security_group.in_http.id,
+#         aws_security_group.in_https.id
+#         ]
 #   user_data                   = <<-EOF
 #               #!/bin/bash
 #               apt-get update

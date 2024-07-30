@@ -1,6 +1,6 @@
 variable "aws_region" {
 #   description = "The AWS region to create resources in."
-#   type        = string
+  type        = string
   default     = ""
 }
 
@@ -22,3 +22,20 @@ variable "aws_secret_access_key" {
 #   type        = string
 #   default     = ""
 # }
+
+variable "aws_profile" {
+  type        = string
+  description = "The AWS profile to use to execute the commands"
+  default     = "default"
+}
+
+variable "environment" {
+  type        = string
+  description = "The environment to deploy to"
+  default     = "dev"
+}
+
+variable "instance_type" {
+  type        = string
+  description = "The instance power"
+}

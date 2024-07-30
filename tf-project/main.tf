@@ -1,14 +1,15 @@
+
 # resource "aws_key_pair" "id_rsa" {
 #   key_name   = "${local.application_name}-key_pair"
 #   public_key = file("../config/keys/id_rsa.pub")
 # }
 
-resource "aws_vpc" "vpc" {
-  tags                 = { Name = "${local.application_name}-vpc" }
-  cidr_block           = "10.127.0.0/24"
-  enable_dns_support   = true
-  enable_dns_hostnames = true
-}
+# resource "aws_vpc" "vpc" {
+#   tags                 = { Name = "${local.application_name}-vpc" }
+#   cidr_block           = "10.127.0.0/24"
+#   enable_dns_support   = true
+#   enable_dns_hostnames = true
+# }
 
 # resource "aws_subnet" "subnet_lan" {
 #   tags       = { Name = "${local.application_name}-subnet_lan" }
@@ -43,6 +44,46 @@ resource "aws_vpc" "vpc" {
 #   gateway_id             = aws_internet_gateway.gw.id
 # }
 
+
+# resource "aws_security_group" "in_ssh" {
+#   tags   = { Name = "${local.application_name}-in_ssh-security_group" }
+#   name   = "${local.application_name}-in_ssh-security_group"
+#   vpc_id = aws_vpc.vpc.id
+#   ingress {
+#     from_port   = 22
+#     to_port     = 22
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# }
+
+
+# resource "aws_security_group" "in_http" {
+#   tags   = { Name = "${local.application_name}-in_http-security_group" }
+#   name   = "${local.application_name}-in_http-security_group"
+#   vpc_id = aws_vpc.vpc.id
+#   ingress {
+#     from_port   = 80
+#     to_port     = 80
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# }
+
+
+# resource "aws_security_group" "in_https" {
+#   tags   = { Name = "${local.application_name}-in_https-security_group" }
+#   name   = "${local.application_name}-in_https-security_group"
+#   vpc_id = aws_vpc.vpc.id
+#   ingress {
+#     from_port   = 443
+#     to_port     = 443
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# }
+
+
 # resource "aws_security_group" "allow_ssh" {
 #   tags   = { Name = "${local.application_name}-security_group" }
 #   name   = "${local.application_name}-security_group"
@@ -73,3 +114,11 @@ resource "aws_vpc" "vpc" {
 #     cidr_blocks = ["0.0.0.0/0"]
 #   }
 # }
+
+resource "aws_s3_bucket" "coodesh_s3" {
+  tags   = { Name = "${local.application_name}-s3" }
+  bucket = "${local.application_name}-s3"
+    lifecycle {
+        prevent_destroy = true
+    }
+}
