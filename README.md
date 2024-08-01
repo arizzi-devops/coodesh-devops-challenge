@@ -26,11 +26,9 @@ git clone <repo_url>
 Crie um arquivo .env as variaveis:
 
 ```
-echo "
-AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
+echo "AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
 AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
-AWS_REGION=<AWS_REGION>
-" > .env
+AWS_REGION=<AWS_REGION>" > .env
 ```
 
 Feito isso, inicie o docker, execute 
